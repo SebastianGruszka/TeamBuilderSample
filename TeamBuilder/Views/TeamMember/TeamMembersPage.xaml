@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TeamBuilder.TeamMembers.Application.TeamMembersPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="{DynamicResource AppResources.TeamTitle}">
+    <CollectionView ItemsSource="{Binding TeamMembers}">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <StackLayout HorizontalOptions="Fill">
+                    <Frame
+                        Margin="8"
+                        BackgroundColor="LightGray"
+                        CornerRadius="16">
+                        <Grid RowDefinitions="*,*,*,*">
+                            <Label
+                                Grid.Row="0"
+                                Style="{StaticResource TextBold16}"
+                                Text="{Binding Name}" />
+                            <Label
+                                Grid.Row="0"
+                                Style="{StaticResource TextNormal12}"
+                                Text="{Binding NickName}" />
+
+                            <Label
+                                Grid.Row="0"
+                                Style="{StaticResource TextNormal12}"
+                                Text="{Binding Position}" />
+
+                            <Label
+                                Grid.Row="0"
+                                Style="{StaticResource TextNormal12}"
+                                Text="{Binding PhoneNumber}" />
+
+                        </Grid>
+                    </Frame>
+                </StackLayout>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+        <CollectionView.Footer>
+            <StackLayout>
+                <Button
+                    Margin="16"
+                    Command="{Binding AddNewMembersCommand}"
+                    HorizontalOptions="Center"
+                    Text="Add Member" />
+            </StackLayout>
+        </CollectionView.Footer>
+    </CollectionView>
+</ContentPage>

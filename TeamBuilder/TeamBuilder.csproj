@@ -39,6 +39,7 @@
 		<PackageReference Include="PropertyChanged.Fody" Version="4.1.0" PrivateAssets="All" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="6.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+		<PackageReference Include="Refit" Version="7.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Remove="TeamMembers\" />
@@ -49,11 +50,35 @@
 		<None Remove="TeamMembers\Application\AddTeamMembers\" />
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="TeamMembers\" />
+		<Folder Include="TeamMembers\Application\" />
 		<Folder Include="TeamMembers\Domain\" />
 		<Folder Include="TeamMembers\Infrastructure\" />
 		<Folder Include="BuildingBlocks\" />
 		<Folder Include="BuildingBlocks\Application\" />
-		<Folder Include="TeamMembers\Application\AddTeamMembers\" />
+		<Folder Include="Views\TeamMember\AddTeamMembers\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Resources\Resx\AppResources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>AppResources.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Resx\AppResources.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>AppResources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+	  <MauiXaml Update="Resources\Styles\Entrys.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Resources\Styles\Frames.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Resources\Styles\Labels.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 </Project>

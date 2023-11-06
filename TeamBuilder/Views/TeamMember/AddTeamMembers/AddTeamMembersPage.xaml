@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TeamBuilder.TeamMembers.Application.AddTeamMembers.AddTeamMembersPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Title="{Binding Title}">
+    <Grid Margin="2" RowDefinitions="*, auto">
+        <Frame
+            Margin="8"
+            BackgroundColor="LightBlue"
+            CornerRadius="16"
+            IsVisible="{Binding IsVisibleAddMoreMembersList, Converter={StaticResource InvertedBoolConverter}}"
+            VerticalOptions="StartAndExpand">
+            <Grid RowDefinitions="1*,1*,1*,1*, auto">
+                <Entry
+                    Grid.Row="0"
+                    HorizontalOptions="Fill"
+                    HorizontalTextAlignment="Start"
+                    MaxLength="64"
+                    Placeholder="{Binding NamePlaceholder}"
+                    Style="{DynamicResource TextBold16}"
+                    Text="{Binding Model.Name}" />
+                <Entry
+                    Grid.Row="1"
+                    HorizontalOptions="Fill"
+                    HorizontalTextAlignment="Start"
+                    MaxLength="64"
+                    Placeholder="{Binding NickNamePlaceholder}"
+                    Style="{DynamicResource TextNormal12}"
+                    Text="{Binding Model.NickName}" />
+                <Entry
+                    Grid.Row="2"
+                    HorizontalOptions="Fill"
+                    HorizontalTextAlignment="Start"
+                    MaxLength="64"
+                    Placeholder="{Binding PositionPlaceholder}"
+                    Style="{DynamicResource TextNormal12}"
+                    Text="{Binding Model.Position}" />
+                <Entry
+                    Grid.Row="3"
+                    HorizontalOptions="Fill"
+                    HorizontalTextAlignment="Start"
+                    Keyboard="Telephone"
+                    Placeholder="{Binding TelephonePlaceholder}"
+                    Style="{DynamicResource TextNormal12}"
+                    Text="{Binding Model.PhoneNumber}" />
+                <Button
+                    Grid.Row="4"
+                    Margin="16"
+                    Command="{Binding AddNewCommand}"
+                    HorizontalOptions="Center"
+                    Text="{Binding AddNewButtonText}"
+                    TextColor="White" />
+            </Grid>
+        </Frame>
+
+        <CollectionView IsVisible="{Binding IsVisibleAddMoreMembersList}" ItemsSource="{Binding NewMembersList}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame
+                        Margin="8"
+                        BackgroundColor="LightBlue"
+                        CornerRadius="16">
+                        <Grid RowDefinitions="1*,1*,1*,1*">
+                            <Entry
+                                Grid.Row="0"
+                                HorizontalOptions="Fill"
+                                HorizontalTextAlignment="Start"
+                                MaxLength="64"
+                                Placeholder="{Binding NamePlaceholder}"
+                                Style="{DynamicResource TextBold16}"
+                                Text="{Binding Name}" />
+                            <Entry
+                                Grid.Row="1"
+                                HorizontalOptions="Fill"
+                                HorizontalTextAlignment="Start"
+                                MaxLength="64"
+                                Placeholder="{Binding NickNamePlaceholder}"
+                                Style="{DynamicResource TextNormal12}"
+                                Text="{Binding NickName}" />
+                            <Entry
+                                Grid.Row="2"
+                                HorizontalOptions="Fill"
+                                HorizontalTextAlignment="Start"
+                                MaxLength="64"
+                                Placeholder="{Binding PositionPlaceholder}"
+                                Style="{DynamicResource TextNormal12}"
+                                Text="{Binding Position}" />
+                            <Entry
+                                Grid.Row="3"
+                                HorizontalOptions="Fill"
+                                HorizontalTextAlignment="Start"
+                                Keyboard="Telephone"
+                                Placeholder="{Binding TelephonePlaceholder}"
+                                Style="{DynamicResource TextNormal12}"
+                                Text="{Binding PhoneNumber}" />
+                        </Grid>
+                    </Frame>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.Footer>
+                <StackLayout>
+                    <Button
+                        Margin="16"
+                        Command="{Binding AddNewCommand}"
+                        HorizontalOptions="Center"
+                        Text="{Binding AddNewButtonText}"
+                        TextColor="White" />
+                </StackLayout>
+            </CollectionView.Footer>
+        </CollectionView>
+        <Button
+            Grid.Row="2"
+            Margin="16"
+            Command="{Binding SaveCommand}"
+            Text="{Binding SaveButtonText}"
+            VerticalOptions="EndAndExpand" />
+    </Grid>
+</ContentPage>

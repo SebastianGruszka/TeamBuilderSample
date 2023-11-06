@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    x:Class="TeamBuilder.Resources.Styles.Labels"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+
+    <Style x:Key="TextNormal16" TargetType="Label">
+        <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="TextColor" Value="DarkGray" />
+    </Style>
+
+    <Style x:Key="TextBold16" TargetType="Label">
+        <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="TextColor" Value="Black" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="TextNormal12" TargetType="Label">
+        <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="DarkGray" />
+    </Style>
+
+    <Style x:Key="TextBold12" TargetType="Label">
+        <Setter Property="HorizontalOptions" Value="CenterAndExpand" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextColor" Value="Black" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+
+
+
+</ResourceDictionary>
