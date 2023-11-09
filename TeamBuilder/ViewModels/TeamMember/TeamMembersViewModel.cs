@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using TeamBuilder.Models.Enums;
 using TeamBuilder.Models.POCO;
 using TeamBuilder.Services.Network;
 using TeamBuilder.TeamMembers.Application.AddTeamMembers;
@@ -17,14 +16,14 @@ namespace TeamBuilder.ViewModels.TeamMember
 
         private readonly ITeamMembersRepository _repository;
         private readonly INetworkService _networkService;
-      
+
         #endregion
 
         #region Constructors
         public TeamMembersViewModel(ITeamMembersRepository repository,
                                     INetworkService networkService
                                    )
-        {     
+        {
             _repository = repository;
             _networkService = networkService;
             TeamMembers = new();
@@ -59,7 +58,7 @@ namespace TeamBuilder.ViewModels.TeamMember
                         {
                             TeamMembers.Add(item);
                         }
-                    }                    
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -68,21 +67,20 @@ namespace TeamBuilder.ViewModels.TeamMember
 #endif
                 }
             }
-            else if (SecureStorage.GetAsync(MembersEnum.member.ToString()) != null)
+            else
             {
-                var data = SecureStorage.GetAsync(MembersEnum.member.ToString());
-
-                foreach (var member in teamMembers)
+                var list = await _repository.GetTeamMembers();
+                foreach (var item in list)
                 {
-                    TeamMembers.Add(member);
+                    TeamMembers.Add(item);
                 }
-            }           
+            }
         }
 
 
         void OnAppearing()
         {
-
+            LoadTeamMembers();
         }
 
 

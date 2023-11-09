@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using TeamBuilder.Api.Services;
 using TeamBuilder.Managers.Busy;
 using TeamBuilder.Managers.Resource;
 using TeamBuilder.Services.Network;
@@ -18,6 +19,9 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        CheckAndRequestStorageWritePermission();
+        CheckAndRequestStorageReadPermission();
+
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
@@ -66,6 +70,7 @@ public static class MauiProgram
         mauiAppBuilder.Services.AddSingleton<ISecureStorageService, SecureStorageService>();
         mauiAppBuilder.Services.AddSingleton<MauiStorage.ISecureStorage>(SecureStorage.Default);
         mauiAppBuilder.Services.AddTransient<ITeamMembersRepository, DummyTeamMembersRepository>();
+        mauiAppBuilder.Services.AddTransient<IApiService, ApiService>();
 
         return mauiAppBuilder;
     }
@@ -84,7 +89,49 @@ public static class MauiProgram
         return mauiAppBuilder;
     }
 
+    #region Permissions
+    public static async Task<PermissionStatus> CheckAndRequestStorageWritePermission()
+    {
+        PermissionStatus status = await Permissions.CheckStatusAsync<Permissions.StorageWrite>();
 
+        if (status == PermissionStatus.Granted)
+            return status;
+
+        if (status == PermissionStatus.Denied && DeviceInfo.Platform == DevicePlatform.iOS)
+        {
+            return status;
+        }
+
+        if (Permissions.ShouldShowRationale<Permissions.StorageWrite>())
+        {
+        }
+
+        status = await Permissions.RequestAsync<Permissions.StorageWrite>();
+
+        return status;
+    }
+
+    public static async Task<PermissionStatus> CheckAndRequestStorageReadPermission()
+    {
+        PermissionStatus status = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
+
+        if (status == PermissionStatus.Granted)
+            return status;
+
+        if (status == PermissionStatus.Denied && DeviceInfo.Platform == DevicePlatform.iOS)
+        {
+            return status;
+        }
+
+        if (Permissions.ShouldShowRationale<Permissions.StorageWrite>())
+        {
+        }
+
+        status = await Permissions.RequestAsync<Permissions.StorageRead>();
+
+        return status;
+    }
+    #endregion
 
 }
 

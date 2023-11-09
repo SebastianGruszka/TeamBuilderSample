@@ -42,6 +42,7 @@
                     HorizontalOptions="Fill"
                     HorizontalTextAlignment="Start"
                     Keyboard="Telephone"
+                    MaxLength="9"
                     Placeholder="{Binding TelephonePlaceholder}"
                     Style="{DynamicResource TextNormal12}"
                     Text="{Binding Model.PhoneNumber}" />

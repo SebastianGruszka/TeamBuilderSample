@@ -1,8 +1,5 @@
-﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using TeamBuilder.Models.Enums;
+﻿using System.Text.Json;
+using TeamBuilder.Models.Consts;
 using TeamBuilder.Models.POCO;
 using TeamBuilder.TeamMembers.Domain;
 using TeamBuilder.Validations;
@@ -14,8 +11,8 @@ namespace TeamBuilder.TeamMembers.Infrastructure
         private List<MemberModel> _teamMemberList = new();
         private TextValidator _textvalidator = new();
         private PhoneNumberValidator _phoneNumberValidator = new();
-        HttpClient _client = new();
-        HttpRequestMessage _request = new();
+        private int _listCount;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DummyTeamMembersRepository"/> class.
@@ -41,44 +38,16 @@ namespace TeamBuilder.TeamMembers.Infrastructure
                 if (teamMember != null)
                 {
                     _teamMemberList.Add(teamMember);
+
+                    var json = JsonSerializer.Serialize(_teamMemberList);
+                    int _listCount = _teamMemberList.Count();
+
+                    SecureStorage.SetAsync(MemberConst.MEMBER + _listCount, json);
                 }
-
-                var json = JsonSerializer.Serialize(_teamMemberList);
-
-                SecureStorage.SetAsync(MembersEnum.member.ToString(), json);
             }
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// Adds the team member.
-        /// </summary>
-        /// <param name="teamMembersList">The team members list.</param>
-        /// <returns>A Task.</returns>
-        public Task AddTeamMember(List<MemberModel> teamMembersList)
-        {
-            if (teamMembersList != null)
-            {
-                foreach (var item in teamMembersList)
-                {
-                    _teamMemberList.Add(new MemberModel()
-                    {
-                        IsActive = item.IsActive,
-                        Name = item.Name,
-                        NickName = item.NickName,
-                        PhoneNumber = item.PhoneNumber,
-                        Position = item.Position
-                    });
-                }
-            }
-
-            var json = JsonSerializer.Serialize(_teamMemberList);
-
-
-            SecureStorage.SetAsync(MembersEnum.member.ToString(), json);
-
-            return Task.CompletedTask;
-        }
 
         /// <summary>
         /// Gets the team members.
@@ -86,51 +55,18 @@ namespace TeamBuilder.TeamMembers.Infrastructure
         /// <returns>A Task.</returns>
         public async Task<List<MemberModel>> GetTeamMembers()
         {
-            Guid _guid = Guid.NewGuid();
+            string json;
+            List<MemberModel> list = new List<MemberModel>();
+            int _listCount = _teamMemberList.Count();
 
-            try
+            for (int i = 0; i < _listCount; i++)
             {
-                string url = $"https://localhost:7222/api/v1/Team/{_guid}"+"/Members";
+                json = await SecureStorage.GetAsync(MemberConst.MEMBER + i);
+                var obj = JsonSerializer.Deserialize<MemberModel>(json);
 
-                var request = new HttpRequestMessage(HttpMethod.Get, url);
-                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
-
-                var response = _client.GetAsync(request.ToString()).ContinueWith(async(respMsg)=> 
-                {
-                    var res = respMsg.Result;
-                    var members = await res.Content.ReadFromJsonAsync<List<MemberModel>>();
-
-                    foreach (var item in members)
-                    {
-                        _teamMemberList.Add(item);
-                    }
-
-                    string json = SecureStorage.GetAsync("member").ToString();
-
-                    var list = JsonSerializer.Deserialize<List<MemberModel>>(json);
-
-                    foreach (var oldMember in list)
-                    {
-                        _teamMemberList.Add(oldMember);
-                    }                    
-                });
-                return _teamMemberList;
-
+                _teamMemberList.Add(obj);
             }
-            catch (Exception ex)
-            {
-                string error = ex.ToString();
-                string json = SecureStorage.GetAsync(MembersEnum.member.ToString()).ToString();
-
-                var list = JsonSerializer.Deserialize<List<MemberModel>>(json);
-
-                foreach (var oldMember in list)
-                {
-                    _teamMemberList.Add(oldMember);
-                }
-
-                return _teamMemberList;
-            }
+            return _teamMemberList;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using TeamBuilder.Api.Services;
 using TeamBuilder.Models.POCO;
 using TeamBuilder.Resources.Resx;
 using TeamBuilder.Services.Network;
@@ -17,17 +18,26 @@ namespace TeamBuilder.ViewModels.TeamMember
         #region Interfaces
 
         private readonly ITeamMembersRepository _repository;
-        private readonly INetworkService _networkService;       
+        private readonly INetworkService _networkService;
+        private readonly IApiService _apiService;
         private readonly ISecureStorage _secureStorage;
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddTeamMembersViewModel"/> class.
+        /// </summary>
+        /// <param name="repository">The repository.</param>
+        /// <param name="networkService">The network service.</param>
+        /// <param name="secureStorage">The secure storage.</param>
         public AddTeamMembersViewModel(ITeamMembersRepository repository,
                                        INetworkService networkService,
+                                       IApiService apiService,
                                        ISecureStorage secureStorage)
         {
             _repository = repository;
             _networkService = networkService;
+            _apiService = apiService;
             _secureStorage = secureStorage;
 
             NewMembersList = new();
@@ -98,12 +108,52 @@ namespace TeamBuilder.ViewModels.TeamMember
         }
 
         /// <summary>
-        /// Saves members.
+        /// Save the added members.
         /// </summary>
         [RelayCommand]
         private async void Save()
-        {            
-            await _repository.AddTeamMember(Model);
+        {     
+            if (_networkService.HasNetwork())
+            {
+                foreach (var item in NewMembersList)
+                {
+                    //RestApi
+                    await _apiService.PostTeamMember(teamMember: new MemberModel()  
+                    {
+                        IsActive = true,
+                        Name = item.Name,
+                        NickName = item.NickName,
+                        PhoneNumber = item.PhoneNumber,
+                        Position = item.Position
+                    });
+
+                    //SecureStorage
+                    await _repository.AddTeamMember(teamMember: new MemberModel()
+                    {
+                        IsActive = true,
+                        Name = item.Name,
+                        NickName = item.NickName,
+                        PhoneNumber = item.PhoneNumber,
+                        Position = item.Position
+                    });
+                }
+            }
+            else
+            {
+                foreach (var item in NewMembersList)
+                {
+                    //SecureStorage
+                    await _repository.AddTeamMember(teamMember: new MemberModel()
+                    {
+                        IsActive = true,
+                        Name = item.Name,
+                        NickName = item.NickName,
+                        PhoneNumber = item.PhoneNumber,
+                        Position = item.Position
+                    });
+                }              
+            }
+            OnGoBack();
         }
 
 
